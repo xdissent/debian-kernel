@@ -103,6 +103,8 @@ build-arch-flavour: $(STAMPS_DIR)/build_$(ARCH)_$(FEATURESET)_$(FLAVOUR)
 
 setup-arch-flavour: $(STAMPS_DIR)/setup_$(ARCH)_$(FEATURESET)_$(FLAVOUR)
 
+diff-arch-flavour: diff_$(ARCH)_$(FEATURESET)_$(FLAVOUR)
+
 source-featureset: $(STAMPS_DIR)/source_$(FEATURESET)
 
 $(BUILD_DIR)/config.$(ARCH)_$(FEATURESET)_$(FLAVOUR): $(KCONFIG)
@@ -204,6 +206,17 @@ endif
 	+$(MAKE_CLEAN) -C '$(SOURCE_DIR)' O='$(CURDIR)/$(DIR)' listnewconfig
 	+yes "" | $(MAKE_CLEAN) -C '$(SOURCE_DIR)' O='$(CURDIR)/$(DIR)' oldconfig >/dev/null
 	@$(stamp)
+
+diff_$(ARCH)_$(FEATURESET)_$(FLAVOUR): CONFIG=$(BUILD_DIR)/config.$(ARCH)_$(FEATURESET)_$(FLAVOUR)
+diff_$(ARCH)_$(FEATURESET)_$(FLAVOUR): SOURCE_DIR=$(BUILD_DIR)/source_$(FEATURESET)
+diff_$(ARCH)_$(FEATURESET)_$(FLAVOUR): DIR=$(BUILD_DIR)/build_$(ARCH)_$(FEATURESET)_$(FLAVOUR)
+diff_$(ARCH)_$(FEATURESET)_$(FLAVOUR): $(STAMPS_DIR)/source_$(FEATURESET) $(BUILD_DIR)/config.$(ARCH)_$(FEATURESET)_$(FLAVOUR)
+	cp '$(DIR)/.config' '$(DIR)/.config.diff'
+	cp '$(CONFIG)' '$(DIR)/.config'
+	+yes "" | $(MAKE_CLEAN) -C '$(SOURCE_DIR)' O='$(CURDIR)/$(DIR)' oldconfig >/dev/null
+	cp '$(DIR)/.config' '$(DIR)/.config.base'
+	cp '$(DIR)/.config.diff' '$(DIR)/.config'
+	debian/bin/diffconfig.py '$(DIR)/.config.base' '$(DIR)/.config.diff'
 
 $(STAMPS_DIR)/build_$(ARCH)_$(FEATURESET)_$(FLAVOUR): DIR=$(BUILD_DIR)/build_$(ARCH)_$(FEATURESET)_$(FLAVOUR)
 $(STAMPS_DIR)/build_$(ARCH)_$(FEATURESET)_$(FLAVOUR): $(STAMPS_DIR)/setup_$(ARCH)_$(FEATURESET)_$(FLAVOUR)

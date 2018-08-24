@@ -75,7 +75,7 @@ class MakeFlags(dict):
 
 
 class Gencontrol(object):
-    makefile_targets = ('binary-arch', 'build-arch', 'setup')
+    makefile_targets = ('binary-arch', 'build-arch', 'setup', 'diff')
     makefile_targets_indep = ('binary-indep', 'build-indep', 'setup')
 
     def __init__(self, config, templates, version=Version):

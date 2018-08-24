@@ -513,9 +513,11 @@ class Gencontrol(Base):
                 % (' '.join("-p%s" % i['Package'] for i in packages_dummy), makeflags))
         cmds_build = ["$(MAKE) -f debian/rules.real build-arch-flavour %s" % makeflags]
         cmds_setup = ["$(MAKE) -f debian/rules.real setup-arch-flavour %s" % makeflags]
+        cmds_diff = ["$(MAKE) -f debian/rules.real diff-arch-flavour %s" % makeflags]
         makefile.add('binary-arch_%s_%s_%s_real' % (arch, featureset, flavour), cmds=cmds_binary_arch)
         makefile.add('build-arch_%s_%s_%s_real' % (arch, featureset, flavour), cmds=cmds_build)
         makefile.add('setup_%s_%s_%s_real' % (arch, featureset, flavour), cmds=cmds_setup)
+        makefile.add('diff_%s_%s_%s_real' % (arch, featureset, flavour), cmds=cmds_diff)
 
         # Substitute kernel version etc. into maintainer scripts,
         # translations and lintian overrides
